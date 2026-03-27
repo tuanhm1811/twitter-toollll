@@ -1,0 +1,16 @@
+{
+  "description": "Twitter Agent session startup hooks",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Perform startup checks for the Twitter Agent plugin:\n\n1. **Config check**: Check if `.twitter-agent.yaml` exists in the current working directory. If it does NOT exist, inform the user: 'Twitter Agent plugin is not configured for this project. Run /setup to initialize.' If it exists, read its YAML content and check that kie_api_key and twitter_api_key are non-empty. If keys are missing, inform the user which keys are missing and suggest running /setup.\n\n2. **Project structure check and auto-fix**: Check if the following directories exist in the current working directory:\n   - `knowledges/` — for knowledge files\n   - `contents/` — for generated Twitter content (.md files)\n   - `images/` — for generated images\n\n   **If any directory is missing, automatically create it.** Inform the user which directories were created.\n\n3. **Auto-organize misplaced files**: After ensuring directories exist, check for files in the project root that belong in subdirectories:\n   - Move any `.pdf`, `.txt`, `.csv`, `.json`, `.doc`, `.docx`, `.xls`, `.xlsx` files from the project root into `knowledges/`\n   - Move any `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg` image files from the project root into `images/`\n   - Do NOT move `.yaml`, `.md` (at root level like summary.md), `.gitignore`, or other config files\n\n   If any files were moved, inform the user: 'Auto-organized: moved N file(s) to their correct directories.' and list which files were moved where.\n\n   Expected project structure:\n   ```\n   project/\n   ├── .twitter-agent.yaml\n   ├── knowledges/\n   ├── contents/\n   ├── images/\n   └── summary.md\n   ```"
+          }
+        ]
+      }
+    ]
+  }
+}

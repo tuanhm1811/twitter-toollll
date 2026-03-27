@@ -1,0 +1,14 @@
+{
+  "name": "luthebao-plugins",
+  "owner": {
+    "name": "luthebao"
+  },
+  "plugins": [
+    {
+      "name": "twitter-agent",
+      "description": "Manage Twitter content creation from knowledge bases — summarization, content generation, image generation, and posting.",
+      "source": "./plugin",
+      "category": "productivity"
+    }
+  ]
+}

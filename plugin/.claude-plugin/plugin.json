@@ -1,0 +1,5 @@
+{
+  "name": "twitter-agent",
+  "version": "1.1.0",
+  "description": "Manage Twitter content creation from knowledge bases — summarization, content generation, image generation, and posting."
+}

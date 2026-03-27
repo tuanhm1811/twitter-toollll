@@ -1,0 +1,14 @@
+# Twitter Agent Configuration
+# Copy this to .twitter-agent.yaml in your project directory
+
+# Required: kie.ai API key (for image generation)
+kie_api_key: ""
+
+# Required: Twitter API credentials
+twitter_api_key: ""
+twitter_api_secret: ""
+twitter_access_token: ""
+twitter_access_secret: ""
+
+# Optional settings
+auto_post: false  # skip confirmation before posting
