@@ -1,7 +1,7 @@
 {
-  "name": "luthebao-plugins",
+  "name": "mtp-plugins",
   "owner": {
-    "name": "luthebao"
+    "name": "sontung"
   },
   "plugins": [
     {
