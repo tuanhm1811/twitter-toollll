@@ -34,8 +34,8 @@ Generate a structured summary from all knowledge files in the current project.
 - filename2.ext — one-line description of contents
 
 ## Suggested Content Angles
-- Angle 1: description of potential Twitter content angle
-- Angle 2: description of potential Twitter content angle
+- Angle 1: description of potential social media content angle
+- Angle 2: description of potential social media content angle
 
 Last updated: <today's date YYYY-MM-DD>
 ```

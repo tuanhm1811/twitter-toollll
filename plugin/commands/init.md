@@ -1,8 +1,8 @@
 ---
-description: Initialize current directory as a Twitter Agent project
+description: Initialize current directory as a Social Agent project
 ---
 
-Initialize the current working directory as a Twitter Agent project.
+Initialize the current working directory as a Social Agent project.
 
 ## Process
 
@@ -10,19 +10,19 @@ Initialize the current working directory as a Twitter Agent project.
 
 2. Create directories:
    - `./knowledges/` — for imported knowledge files
-   - `./contents/` — for generated Twitter content (.md drafts)
+   - `./contents/` — for generated social media content (.md drafts)
    - `./images/` — for generated images (banners, etc.)
 
 3. Show the expected project structure:
    ```
    project/
-   ├── .twitter-agent.yaml   # Config (run /setup)
-   ├── knowledges/            # Knowledge files
-   ├── contents/              # Twitter content drafts
-   ├── images/                # Generated images
-   └── summary.md             # Knowledge summary
+   ├── .social-agent.yaml     # Config (run /setup)
+   ├── knowledges/             # Knowledge files
+   ├── contents/               # Content drafts (Twitter, Reddit, Threads, Facebook)
+   ├── images/                 # Generated images
+   └── summary.md              # Knowledge summary
    ```
 
-4. Check if `.twitter-agent.yaml` exists in the current directory. If not, suggest: "Run `/setup` to configure your API keys."
+4. Check if `.social-agent.yaml` exists in the current directory. If not, suggest: "Run `/setup` to configure your API keys."
 
 5. Confirm: "Project initialized. Add knowledge files to ./knowledges/ or use `/import <file>` to bring in files and URLs."

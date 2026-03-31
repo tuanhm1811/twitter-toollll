@@ -1,13 +1,13 @@
 ---
-description: Post Twitter drafts — publish tweets and threads
+description: Post content to social media — publish drafts to Twitter, Reddit, Threads, or Facebook
 argument-hint: [draft-file|list]
 ---
 
-Publish draft content to Twitter using the Twitter API.
+Publish draft content to the correct social media platform based on the draft's `platform` frontmatter field.
 
 ## Setup
 
-1. Read config from `.twitter-agent.yaml` in the current directory to get `auto_post`.
+1. Read config from `.social-agent.yaml` in the current directory to get `auto_post`.
 2. Check that `./contents/` directory exists. If not, tell user: "No contents/ directory found. Run `/setup` or `/init` first."
 
 ## Actions
@@ -19,29 +19,33 @@ Publish draft content to Twitter using the Twitter API.
    - If no argument, find the most recent `.md` file in `./contents/` with `status: draft`.
    - If no drafts found, tell user to run `/generate-content` first.
 
-2. **Read and display draft**: Show the full content (text + any linked images) to the user.
+2. **Read and display draft**: Show the full content (text + any linked images) to the user. Show which platform it will be posted to.
 
 3. **Confirm** (unless `auto_post: true` in config):
-   - Ask: "Ready to post this to Twitter? (yes/no)"
+   - Ask: "Ready to post this to [platform]? (yes/no)"
    - If no, stop and tell user they can edit with `/generate-content edit <file>`.
 
-4. **Post**: The script handles reading the draft, posting, and updating frontmatter in one step.
+4. **Post**: The script handles reading the draft, routing to the correct platform, posting, and updating frontmatter in one step.
 
    ```bash
-   python ${CLAUDE_PLUGIN_ROOT}/scripts/post_twitter.py \
+   python ${CLAUDE_PLUGIN_ROOT}/scripts/post.py \
      --file "<path to draft .md file>" \
-     --config .twitter-agent.yaml
+     --config .social-agent.yaml
    ```
 
 5. **Handle result**:
    - Parse JSON output.
    - If `success: true` and `frontmatter_updated: true`:
-     - The script already updated the draft frontmatter (status, posted_at, tweet_ids).
-     - Confirm: "Posted! Tweet URL: https://twitter.com/i/status/<tweet_id>"
+     - The script already updated the draft frontmatter (status, posted_at, post_ids).
+     - Confirm with platform-specific URL:
+       - Twitter: "Posted! Tweet URL: https://twitter.com/i/status/<post_id>"
+       - Reddit: "Posted! Reddit URL: https://reddit.com/<post_id>"
+       - Threads: "Posted! Threads post ID: <post_id>"
+       - Facebook: "Posted! Facebook post ID: <post_id>"
    - If `success: false`:
-     - Check if error is a network/proxy/sandbox restriction (403 Forbidden, tunnel, connection refused, proxy error).
+     - Check if error is a network/proxy/sandbox restriction.
      - If **network/sandbox error**: follow the "Sandbox Fallback" section below.
-     - Otherwise show error message and suggest fixes (rate limit — wait, auth error — re-run `/setup`).
+     - Otherwise show error message and suggest fixes.
 
 ## Sandbox Fallback
 
@@ -52,9 +56,9 @@ When running inside the Claude desktop app, outbound network requests are blocke
    ```bash
    #!/bin/bash
    cd "<user's project directory>"
-   python "<absolute path to plugin>/scripts/post_twitter.py" \
+   python "<absolute path to plugin>/scripts/post.py" \
      --file "<path to draft .md file>" \
-     --config .twitter-agent.yaml
+     --config .social-agent.yaml
    ```
 
    Make it executable: `chmod +x ./post_draft.sh`
@@ -72,12 +76,12 @@ When running inside the Claude desktop app, outbound network requests are blocke
 
 3. **When user pastes JSON output back**:
    - Parse the JSON result.
-   - If `success: true`: the draft frontmatter is already updated by the script. Confirm with tweet URL.
+   - If `success: true`: the draft frontmatter is already updated by the script. Confirm with post URL.
    - If `success: false`: show the error and suggest fixes.
    - Clean up: remove `./post_draft.sh`.
 
 ### `list`
 
 1. List all `.md` files in `./contents/` with `status: draft`.
-2. Show: filename, type, topic, created_at, has_images.
+2. Group by platform, then show: filename, type, topic, created_at, has_images.
 3. If no drafts, tell user to run `/generate-content`.

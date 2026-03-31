@@ -1,9 +1,9 @@
 ---
-description: Generate Twitter post drafts from project knowledge
-argument-hint: [topic|list|edit <file>]
+description: Generate social media post drafts from project knowledge
+argument-hint: --platform <name> [topic] | list | edit <file>
 ---
 
-Create Twitter post drafts from the current project's knowledge summary.
+Create social media post drafts from the current project's knowledge summary, formatted for the target platform.
 
 ## Setup
 
@@ -16,77 +16,82 @@ All content drafts are saved as `.md` files in `./contents/` with the following 
 ### File Naming Convention
 
 ```
-YYYY-MM-DD_<topic-slug>_<type>.md
+YYYY-MM-DD_<topic-slug>_<type>_<platform>.md
 ```
 
 Examples:
-- `2026-03-27_ai-model-comparison_thread.md`
-- `2026-03-27_gpt5-release_tweet.md`
-- `2026-03-28_ml-trends-2026_thread.md`
+- `2026-03-30_ai-trends_thread_twitter.md`
+- `2026-03-30_ai-trends_submission_reddit.md`
+- `2026-03-30_ai-trends_post_facebook.md`
+- `2026-03-30_ai-trends_thread_threads.md`
 
 ### File Content Template
 
 ```markdown
 ---
-type: tweet | thread
+platform: twitter | reddit | threads | facebook
+type: tweet | thread | post | submission
 topic: "Short topic description"
 status: draft | posted
 created_at: "YYYY-MM-DD HH:MM"
 posted_at: ""
-tweet_ids: []
+post_ids: []
 has_images: false
 images:
   - path: ""
     description: ""
+# Reddit-specific (include only for reddit)
+subreddit: ""
+title: ""
+# Facebook-specific (include only for facebook)
+visibility: "public"
 ---
 
-## Tweet 1
-Content of the first tweet (max 280 characters)...
-
-## Tweet 2
-Content of the second tweet...
-
-## Tweet 3
-Content of the third tweet...
+[Content body — format depends on platform]
 ```
 
-**Frontmatter fields:**
-- `type` — `tweet` (single) or `thread` (multiple tweets)
-- `topic` — short description of the content topic
-- `status` — `draft` (not yet posted) or `posted` (already published)
-- `created_at` — when the draft was created
-- `posted_at` — when it was posted to Twitter (empty if draft)
-- `tweet_ids` — list of Twitter tweet IDs after posting (empty if draft)
-- `has_images` — whether images are attached to this content
-- `images` — list of image objects with `path` and `description`
+### Platform-Specific Body Formats
+
+**Twitter** (type: tweet or thread):
+- Max 280 characters per tweet
+- Single tweet: plain text body
+- Thread: split into `## Tweet 1`, `## Tweet 2`, etc.
+- 3-7 tweets per thread recommended
+
+**Reddit** (type: submission):
+- `title` field in frontmatter (max 300 characters)
+- `subreddit` field in frontmatter (target subreddit, without r/ prefix)
+- Body under `## Body` heading, full markdown supported
+- No character limit on body
+
+**Threads** (type: post or thread):
+- Max 500 characters per post
+- Single post: plain text body
+- Thread: split into `## Post 1`, `## Post 2`, etc.
+- 3-7 posts per thread recommended
+
+**Facebook** (type: post):
+- No practical character limit
+- Entire body is one post, plain text
+- `visibility` field: "public" (default)
 
 ## Actions
 
-### Generate new content (default or with topic)
+### Generate new content (`--platform <name> [topic]`)
 
-1. Read `./summary.md`. If it doesn't exist, tell user to run `/summarize` first.
-2. If a topic argument was given, focus content on that topic from the summary.
-3. If no topic, pick the most compelling angle from "Suggested Content Angles".
-4. Generate Twitter content. Choose the best format:
-   - **Single tweet**: For concise facts or announcements (max 280 characters)
-   - **Thread**: For explanations, tutorials, or multi-faceted topics (3-7 tweets)
-5. Save to `./contents/` using the file naming convention and content template above.
-6. Confirm: "Draft created at `<path>`. Review it, then use `/generate-image` for visuals or `/post-twitter` to publish."
+1. `--platform` is required. If not provided, tell user: "Please specify a platform: `/generate-content --platform twitter|reddit|threads|facebook [topic]`"
+2. Read `./summary.md`. If it doesn't exist, tell user to run `/summarize` first.
+3. If a topic argument was given, focus content on that topic from the summary.
+4. If no topic, pick the most compelling angle from "Suggested Content Angles".
+5. Generate content following the platform-specific format rules above.
+6. Save to `./contents/` using the file naming convention.
+7. Confirm: "Draft created at `<path>`. Review it, then use `/generate-image` for visuals or `/post` to publish."
 
 ### `list`
 
 1. List all `.md` files in `./contents/`.
-2. For each, read the frontmatter and display: filename, type, topic, status, created_at, has_images.
-3. Group by status: drafts first, then posted.
-4. Show a summary like:
-   ```
-   Drafts:
-     - 2026-03-27_ai-trends_thread.md — thread — "AI Trends 2026" — no images
-     - 2026-03-27_new-model_tweet.md — tweet — "New Model Release" — 1 image
-
-   Posted:
-     - 2026-03-26_ml-basics_thread.md — thread — "ML Basics" — posted 2026-03-26
-   ```
+2. For each, read the frontmatter and display: filename, platform, type, topic, status, created_at, has_images.
+3. Group by platform, then by status (drafts first, then posted).
 
 ### `edit <file>`
 

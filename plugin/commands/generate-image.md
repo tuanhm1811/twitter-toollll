@@ -1,9 +1,9 @@
 ---
-description: Generate images for Twitter drafts using kie.ai
+description: Generate images for social media drafts using kie.ai
 argument-hint: [draft-file] [--prompt "custom prompt"]
 ---
 
-Generate banner images for Twitter post drafts using kie.ai image generation API.
+Generate banner images for social media post drafts using kie.ai image generation API.
 
 ## Setup
 
@@ -23,7 +23,7 @@ Generate banner images for Twitter post drafts using kie.ai image generation API
 - Otherwise, read the draft content and craft an image prompt that:
   - Captures the main theme of the tweet/thread
   - Is descriptive and specific for AI image generation
-  - Requests a style suitable for Twitter banners (clean, professional, eye-catching)
+  - Requests a style suitable for social media banners (clean, professional, eye-catching)
   - Specifies landscape orientation
 
 ### Image Naming Convention
@@ -43,7 +43,7 @@ python ${CLAUDE_PLUGIN_ROOT}/scripts/generate_image.py \
   --prompt "<crafted prompt>" \
   --output "./images/YYYY-MM-DD_<topic-slug>_banner.png" \
   --size "3:2" \
-  --config .twitter-agent.yaml
+  --config .social-agent.yaml
 ```
 
 ### Handle result
