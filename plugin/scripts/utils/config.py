@@ -4,7 +4,7 @@ import yaml
 
 def get_config_path():
     """Return the config file path in the current working directory."""
-    return os.path.join(os.getcwd(), ".twitter-agent.yaml")
+    return os.path.join(os.getcwd(), ".social-agent.yaml")
 
 
 def load_config(path=None):

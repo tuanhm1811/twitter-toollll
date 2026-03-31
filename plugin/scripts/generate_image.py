@@ -132,7 +132,7 @@ def main(argv=None):
                         help="Output file path (default: ./images/output.png)")
     parser.add_argument("--size", default="3:2", choices=["1:1", "3:2", "2:3"],
                         help="Aspect ratio (default: 3:2 for Twitter banners)")
-    parser.add_argument("--config", help="Config file path (default: .twitter-agent.yaml)")
+    parser.add_argument("--config", help="Config file path (default: .social-agent.yaml)")
     args = parser.parse_args(argv)
 
     config = load_config(args.config)
