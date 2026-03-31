@@ -28,7 +28,7 @@ Publish draft content to the correct social media platform based on the draft's 
 4. **Post**: The script handles reading the draft, routing to the correct platform, posting, and updating frontmatter in one step.
 
    ```bash
-   python ${CLAUDE_PLUGIN_ROOT}/scripts/post.py \
+   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/post.py \
      --file "<path to draft .md file>" \
      --config .social-agent.yaml
    ```
@@ -56,7 +56,7 @@ When running inside the Claude desktop app, outbound network requests are blocke
    ```bash
    #!/bin/bash
    cd "<user's project directory>"
-   python "<absolute path to plugin>/scripts/post.py" \
+   python3 "<absolute path to plugin>/scripts/post.py" \
      --file "<path to draft .md file>" \
      --config .social-agent.yaml
    ```

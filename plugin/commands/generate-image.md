@@ -39,7 +39,7 @@ Save images to `./images/`, matching the content file's topic slug.
 Run the Python script:
 
 ```bash
-python ${CLAUDE_PLUGIN_ROOT}/scripts/generate_image.py \
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/generate_image.py \
   --prompt "<crafted prompt>" \
   --output "./images/YYYY-MM-DD_<topic-slug>_banner.png" \
   --size "3:2" \
