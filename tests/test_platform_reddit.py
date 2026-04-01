@@ -86,16 +86,16 @@ def test_post_submission(mock_praw):
 
 
 @patch("scripts.platforms.reddit.praw")
-def test_post_submission_with_image(mock_praw):
-    """post() creates a Reddit image submission when images provided."""
+def test_post_ignores_images(mock_praw):
+    """post() ignores images and always creates text post."""
     from scripts.platforms.reddit import post
 
     mock_reddit = MagicMock()
     mock_subreddit = MagicMock()
     mock_submission = MagicMock()
-    mock_submission.id = "img456"
-    mock_submission.url = "https://reddit.com/r/test/comments/img456/title"
-    mock_subreddit.submit_image.return_value = mock_submission
+    mock_submission.id = "txt789"
+    mock_submission.url = "https://reddit.com/r/test/comments/txt789/title"
+    mock_subreddit.submit.return_value = mock_submission
     mock_reddit.subreddit.return_value = mock_subreddit
     mock_praw.Reddit.return_value = mock_reddit
 
@@ -110,11 +110,12 @@ def test_post_submission_with_image(mock_praw):
     frontmatter = {
         "platform": "reddit",
         "subreddit": "test",
-        "title": "Image Post",
+        "title": "Image Ignored",
     }
-    result = post(config, ["Body text."], images=["/path/to/img.png"], frontmatter=frontmatter)
+    result = post(config, ["Body text."], images=[{"path": "/img.png", "url": "https://kie.ai/img.png"}], frontmatter=frontmatter)
     assert result["success"] is True
-    assert result["post_ids"] == ["img456"]
+    mock_subreddit.submit.assert_called_once()
+    mock_subreddit.submit_image.assert_not_called()
 
 
 @patch("scripts.platforms.reddit.praw")

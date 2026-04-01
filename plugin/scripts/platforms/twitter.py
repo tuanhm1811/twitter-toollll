@@ -25,7 +25,7 @@ def post(config, content_parts, images=None, frontmatter=None):
     Args:
         config: Full config dict with 'twitter' section.
         content_parts: List of strings. 1 item = single tweet, 2+ = thread.
-        images: Optional list of image file paths. Attached to first tweet.
+        images: Optional list of image dicts or file paths. Attached to first tweet.
         frontmatter: Draft frontmatter dict (unused for Twitter).
 
     Returns:
@@ -53,7 +53,8 @@ def post(config, content_parts, images=None, frontmatter=None):
             )
             api_v1 = tweepy.API(auth)
             media_ids = []
-            for path in images:
+            for img in images:
+                path = img["path"] if isinstance(img, dict) else img
                 media = api_v1.media_upload(path)
                 media_ids.append(media.media_id)
 

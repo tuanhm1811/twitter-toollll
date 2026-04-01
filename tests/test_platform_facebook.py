@@ -68,3 +68,21 @@ def test_post_api_error(mock_requests):
     result = post(config, ["Hello!"])
     assert result["success"] is False
     assert "invalid token" in result["error"].lower()
+
+
+@patch("scripts.platforms.facebook.requests")
+@patch("builtins.open", mock_open(read_data=b"imgdata"))
+def test_post_with_image_dicts(mock_requests):
+    """post() handles image dicts (new format) extracting path for upload."""
+    from scripts.platforms.facebook import post
+
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = {"id": "12345_photo2"}
+    mock_requests.post.return_value = mock_resp
+    config = {"facebook": {"page_access_token": "token", "page_id": "12345"}}
+    result = post(config, ["Dict image!"], images=[{"path": "/path/to/img.png", "url": "https://kie.ai/img.png"}])
+    assert result["success"] is True
+    assert result["post_ids"] == ["12345_photo2"]
+    call_url = mock_requests.post.call_args[0][0]
+    assert "photos" in call_url

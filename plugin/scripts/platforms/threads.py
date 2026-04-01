@@ -72,7 +72,7 @@ def post(config, content_parts, images=None, frontmatter=None):
     Args:
         config: Full config dict with 'threads' section.
         content_parts: List of strings. 1 item = single post, 2+ = thread.
-        images: Optional list of image file paths (not yet supported for Threads API uploads).
+        images: Optional list of image dicts with 'path' and 'url' keys.
         frontmatter: Draft frontmatter dict (unused for Threads).
 
     Returns:
@@ -81,12 +81,20 @@ def post(config, content_parts, images=None, frontmatter=None):
     access_token = config["threads"]["access_token"]
     post_ids = []
 
+    # Extract image URL for first post (if available)
+    first_image_url = None
+    if images:
+        img = images[0]
+        url = img.get("url", "") if isinstance(img, dict) else ""
+        if url:
+            first_image_url = url
+
     try:
         reply_to = None
-        for text in content_parts:
-            # Create container
-            container_id = _create_container(access_token, text, reply_to_id=reply_to)
-            # Publish
+        for i, text in enumerate(content_parts):
+            # Attach image only to first post
+            image_url = first_image_url if i == 0 else None
+            container_id = _create_container(access_token, text, reply_to_id=reply_to, image_url=image_url)
             post_id = _publish_container(access_token, container_id)
             post_ids.append(post_id)
             reply_to = post_id

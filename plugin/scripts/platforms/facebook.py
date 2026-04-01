@@ -27,7 +27,8 @@ def post(config, content_parts, images=None, frontmatter=None):
 
     try:
         if images:
-            with open(images[0], "rb") as img_file:
+            img_path = images[0]["path"] if isinstance(images[0], dict) else images[0]
+            with open(img_path, "rb") as img_file:
                 resp = requests.post(
                     f"{GRAPH_API_BASE}/{page_id}/photos",
                     data={"message": body, "access_token": access_token},

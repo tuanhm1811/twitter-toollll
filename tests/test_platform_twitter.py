@@ -131,3 +131,34 @@ def test_post_with_images(mock_tweepy):
     mock_api_v1.media_upload.assert_called_once_with("/path/to/img.png")
     call_kwargs = mock_client.create_tweet.call_args[1]
     assert call_kwargs["media_ids"] == [999]
+
+
+@patch("scripts.platforms.twitter.tweepy")
+def test_post_with_image_dicts(mock_tweepy):
+    """post() handles image dicts (new format) extracting path for upload."""
+    from scripts.platforms.twitter import post
+
+    mock_client = MagicMock()
+    mock_client.create_tweet.return_value = MagicMock(
+        data={"id": "222", "text": "With dict image"}
+    )
+    mock_tweepy.Client.return_value = mock_client
+
+    mock_api_v1 = MagicMock()
+    mock_media = MagicMock()
+    mock_media.media_id = 888
+    mock_api_v1.media_upload.return_value = mock_media
+    mock_tweepy.OAuth1UserHandler.return_value = MagicMock()
+    mock_tweepy.API.return_value = mock_api_v1
+
+    config = {
+        "twitter": {
+            "api_key": "k",
+            "api_secret": "s",
+            "access_token": "t",
+            "access_secret": "a",
+        }
+    }
+    result = post(config, ["With dict image"], images=[{"path": "/path/to/img.png", "url": "https://kie.ai/img.png"}])
+    assert result["success"] is True
+    mock_api_v1.media_upload.assert_called_once_with("/path/to/img.png")

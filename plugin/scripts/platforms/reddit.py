@@ -25,7 +25,7 @@ def post(config, content_parts, images=None, frontmatter=None):
     Args:
         config: Full config dict with 'reddit' section.
         content_parts: List of strings. For Reddit, first item is the body.
-        images: Optional list of image file paths. If provided, creates image post.
+        images: Optional list of image dicts (ignored — Reddit always uses text posts).
         frontmatter: Draft frontmatter dict with 'subreddit' and 'title' fields.
 
     Returns:
@@ -54,16 +54,11 @@ def post(config, content_parts, images=None, frontmatter=None):
         )
         subreddit = reddit.subreddit(subreddit_name)
 
-        if images:
-            submission = subreddit.submit_image(
-                title=title,
-                image_path=images[0],
-            )
-        else:
-            submission = subreddit.submit(
-                title=title,
-                selftext=body,
-            )
+        # Always use text post — images are not supported for Reddit
+        submission = subreddit.submit(
+            title=title,
+            selftext=body,
+        )
 
         return {
             "success": True,
