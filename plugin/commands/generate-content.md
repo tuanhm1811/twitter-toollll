@@ -50,30 +50,90 @@ visibility: "public"
 [Content body — format depends on platform]
 ```
 
-### Platform-Specific Body Formats
+### Platform-Specific Body Formats & Formatting Rules
 
 **Twitter** (type: tweet or thread):
 - Max 280 characters per tweet
 - Single tweet: plain text body
 - Thread: split into `## Tweet 1`, `## Tweet 2`, etc.
 - 3-7 tweets per thread recommended
+- **Formatting:**
+  - Separate each idea/point with a blank line (line break)
+  - Hook strong on the first line — make it attention-grabbing
+  - 1-2 sentences per block, never a wall of text
+  - Use 1 emoji at the start of the first line (optional for subsequent lines)
+  - End with 1-2 relevant hashtags on a separate line
+  - Example:
+    ```
+    🚀 NASA's Artemis II just launched — first crewed Moon mission since 1972.
+
+    4 astronauts. 10-day journey around the lunar far side.
+
+    Victor Glover becomes the first person of color to leave Earth orbit.
+
+    #ArtemisII #NASA
+    ```
 
 **Reddit** (type: submission):
 - `title` field in frontmatter (max 300 characters)
 - `subreddit` field in frontmatter (target subreddit, without r/ prefix)
 - Body under `## Body` heading, full markdown supported
 - No character limit on body
+- **Formatting:**
+  - Use markdown headers, bullet points, bold for structure
+  - Short paragraphs (2-3 sentences each), separated by blank lines
+  - No emojis (Reddit culture prefers plain text)
 
 **Threads** (type: post or thread):
 - Max 500 characters per post
 - Single post: plain text body
 - Thread: split into `## Post 1`, `## Post 2`, etc.
 - 3-7 posts per thread recommended
+- **Formatting:**
+  - Separate each idea with a blank line
+  - Conversational tone, more casual than Twitter
+  - Use bullet points (•) for lists
+  - 1 emoji at opening line, sparingly elsewhere
+  - 0-3 hashtags at the end on a separate line
+  - Example:
+    ```
+    NASA just made history. 🌕
+
+    Artemis II launched today — the first crewed Moon mission in over 50 years.
+
+    The crew:
+    • Reid Wiseman
+    • Victor Glover
+    • Christina Koch
+    • Jeremy Hansen
+
+    10-day journey around the lunar far side.
+
+    #ArtemisII
+    ```
 
 **Facebook** (type: post):
 - No practical character limit
 - Entire body is one post, plain text
 - `visibility` field: "public" (default)
+- **Formatting:**
+  - Short paragraphs (2-3 sentences), separated by blank lines
+  - Strong hook in the first paragraph (Facebook truncates after ~3 lines with "See more")
+  - Storytelling style — more detail and context than Twitter/Threads
+  - Optional emoji at start of paragraphs
+  - End with a question or CTA to encourage engagement (e.g., "What do you think? 👇")
+  - Example:
+    ```
+    History is being made right now. 🚀
+
+    NASA's Artemis II has launched — the first crewed mission to the Moon since 1972. Four astronauts are on a 10-day journey around the lunar far side.
+
+    Victor Glover becomes the first person of color to leave Earth orbit. Christina Koch becomes the first woman on a lunar trajectory.
+
+    After months of delays, the Artemis era has officially begun.
+
+    What do you think about humanity's return to the Moon? 👇
+    ```
 
 ## Actions
 
