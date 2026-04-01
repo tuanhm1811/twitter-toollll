@@ -85,7 +85,8 @@ visibility: "public"
 4. If no topic, pick the most compelling angle from "Suggested Content Angles".
 5. Generate content following the platform-specific format rules above.
 6. Save to `./contents/` using the file naming convention.
-7. Confirm: "Draft created at `<path>`. Review it, then use `/generate-image` for visuals or `/post` to publish."
+7. Confirm: "Draft created at `<path>`. Review it, then use `/post` to publish."
+8. Ask the user: "Would you like to generate a banner image for this topic? Run `/generate-image` to create one that will be shared across all drafts with the same topic."
 
 ### `list`
 

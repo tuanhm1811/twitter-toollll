@@ -50,11 +50,18 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/generate_image.py \
 
 1. Parse the JSON output from the script.
 2. If `success: true`:
-   - Update the draft file's frontmatter:
-     - Set `has_images: true`
-     - Add entry to `images:` list with `path` (relative, e.g. `../images/2026-03-27_ai-trends_banner.png`) and `description` (the prompt used)
+   - The JSON response includes both `path` (local file) and `url` (remote kie.ai URL).
+   - Find all draft files in `./contents/` that share the same topic slug (extract from the image filename pattern `YYYY-MM-DD_<topic-slug>_banner.png`). Match draft files named `*_<topic-slug>_*`.
+   - For each matching draft file (skip files with `platform: reddit`):
+     - Update frontmatter: set `has_images: true`
+     - Add entry to `images:` list:
+       ```yaml
+       - path: "images/YYYY-MM-DD_<topic-slug>_banner.png"
+         url: "<url from JSON response>"
+         description: "<the prompt used>"
+       ```
    - Show the generated image to the user (use Read tool on the image file).
-   - Confirm: "Image generated at `<path>` and linked to draft."
+   - Confirm: "Image generated at `<path>` and linked to N draft(s): [list filenames]."
 3. If `success: false`:
    - Show the error message.
    - Suggest: "Try again with a different prompt using `/generate-image --prompt \"...\"`"
