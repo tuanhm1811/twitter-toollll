@@ -120,7 +120,7 @@ def _download_image(headers, image_url, output_path):
         with open(output_path, "wb") as f:
             f.write(img_resp.content)
 
-        return {"success": True, "path": output_path}
+        return {"success": True, "path": output_path, "url": image_url}
     except Exception as e:
         return {"success": False, "error": f"Failed to download image: {e}"}
 
