@@ -80,13 +80,14 @@ visibility: "public"
 ### Generate new content (`--platform <name> [topic]`)
 
 1. `--platform` is required. If not provided, tell user: "Please specify a platform: `/generate-content --platform twitter|reddit|threads|facebook [topic]`"
-2. Read `./summary.md`. If it doesn't exist, tell user to run `/summarize` first.
-3. If a topic argument was given, focus content on that topic from the summary.
-4. If no topic, pick the most compelling angle from "Suggested Content Angles".
-5. Generate content following the platform-specific format rules above.
-6. Save to `./contents/` using the file naming convention.
-7. Confirm: "Draft created at `<path>`. Review it, then use `/post` to publish."
-8. Ask the user: "Would you like to generate a banner image for this topic? Run `/generate-image` to create one that will be shared across all drafts with the same topic."
+2. **Ask immediately:** "Would you like to generate a banner image for this content? (default: yes for scheduled tasks)" — If the user declines, skip image generation. If they agree or don't respond (scheduled task), proceed with image generation after step 7.
+3. Read `./summary.md`. If it doesn't exist, tell user to run `/summarize` first.
+4. If a topic argument was given, focus content on that topic from the summary.
+5. If no topic, pick the most compelling angle from "Suggested Content Angles".
+6. Generate content following the platform-specific format rules above.
+7. Save to `./contents/` using the file naming convention.
+8. Confirm: "Draft created at `<path>`."
+9. **If image generation was agreed to (or this is a scheduled task):** Run `/generate-image` for this draft. The image will be shared across all drafts with the same topic slug.
 
 ### `list`
 
