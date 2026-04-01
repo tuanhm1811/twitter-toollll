@@ -173,7 +173,24 @@ Hello world.
 
 
 def test_resolve_image_paths_relative():
-    """resolve_image_paths converts relative paths to absolute using project root."""
+    """resolve_image_paths converts relative paths to absolute and preserves url."""
+    from scripts.utils.draft import resolve_image_paths
+
+    frontmatter = {
+        "has_images": True,
+        "images": [
+            {"path": "images/banner.png", "url": "https://kie.ai/img/abc.png", "description": "A banner"},
+        ],
+    }
+    draft_dir = "/project/contents"
+    result = resolve_image_paths(frontmatter, draft_dir)
+    assert len(result) == 1
+    assert result[0]["path"] == "/project/images/banner.png"
+    assert result[0]["url"] == "https://kie.ai/img/abc.png"
+
+
+def test_resolve_image_paths_no_url():
+    """resolve_image_paths returns empty url when image has no url field."""
     from scripts.utils.draft import resolve_image_paths
 
     frontmatter = {
@@ -182,10 +199,11 @@ def test_resolve_image_paths_relative():
             {"path": "images/banner.png", "description": "A banner"},
         ],
     }
-    # Simulate draft in /project/contents/
     draft_dir = "/project/contents"
-    paths = resolve_image_paths(frontmatter, draft_dir)
-    assert paths == ["/project/images/banner.png"]
+    result = resolve_image_paths(frontmatter, draft_dir)
+    assert len(result) == 1
+    assert result[0]["path"] == "/project/images/banner.png"
+    assert result[0]["url"] == ""
 
 
 def test_resolve_image_paths_no_images():
@@ -193,5 +211,5 @@ def test_resolve_image_paths_no_images():
     from scripts.utils.draft import resolve_image_paths
 
     frontmatter = {"has_images": False, "images": []}
-    paths = resolve_image_paths(frontmatter, "/project/contents")
-    assert paths == []
+    result = resolve_image_paths(frontmatter, "/project/contents")
+    assert result == []

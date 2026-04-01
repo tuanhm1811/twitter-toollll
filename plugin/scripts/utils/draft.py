@@ -92,17 +92,22 @@ def resolve_image_paths(frontmatter, draft_dir):
         draft_dir: Absolute path to the directory containing the draft file.
 
     Returns:
-        List of absolute image file paths.
+        List of dicts with 'path' (absolute local path) and 'url' (remote URL, may be empty).
     """
     project_dir = os.path.dirname(draft_dir)  # contents/ -> project root
-    image_paths = []
+    resolved = []
 
     if frontmatter.get("has_images") and frontmatter.get("images"):
         for img in frontmatter["images"]:
-            p = img.get("path", "") if isinstance(img, dict) else str(img)
+            if isinstance(img, dict):
+                p = img.get("path", "")
+                url = img.get("url", "")
+            else:
+                p = str(img)
+                url = ""
             if p:
                 if not os.path.isabs(p):
                     p = os.path.join(project_dir, p)
-                image_paths.append(p)
+                resolved.append({"path": p, "url": url})
 
-    return image_paths
+    return resolved
