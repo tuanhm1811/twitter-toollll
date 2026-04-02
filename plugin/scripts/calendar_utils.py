@@ -66,7 +66,7 @@ def parse_calendar(file_path):
                 slot["image"] = line.replace("**Image:**", "").strip()
             elif line.startswith("**Image file:**"):
                 slot["image_file"] = line.replace("**Image file:**", "").strip()
-            elif line.startswith("- contents/") or line.startswith("- images/"):
+            elif line.startswith("- contents/"):
                 if "drafts" not in slot:
                     slot["drafts"] = []
                 slot["drafts"].append(line.lstrip("- ").strip())

@@ -120,7 +120,7 @@ def test_generate_review_html_char_count():
         with open(output_path, "r") as f:
             html = f.read()
 
-        assert "11" in html  # character count displayed
+        assert "11 characters" in html
     finally:
         os.unlink(output_path)
 
