@@ -28,6 +28,22 @@ def validate_config(config):
     return validate_platform_config(config, "threads", REQUIRED_KEYS)
 
 
+def verify_credentials(config):
+    """Verify Threads credentials by calling /me. Returns dict with success."""
+    access_token = config["threads"]["access_token"]
+    try:
+        resp = requests.get(
+            f"{THREADS_API_BASE}/me",
+            params={"access_token": access_token, "fields": "id,username"},
+        )
+        data = resp.json()
+        if "error" in data:
+            return {"success": False, "error": data["error"].get("message", str(data["error"]))}
+        return {"success": True, "username": data.get("username", data.get("id"))}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 def _create_container(access_token, text, reply_to_id=None, image_url=None):
     """Create a Threads media container.
 

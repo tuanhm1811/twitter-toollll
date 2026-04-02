@@ -19,6 +19,22 @@ def validate_config(config):
     return validate_platform_config(config, "twitter", REQUIRED_KEYS)
 
 
+def verify_credentials(config):
+    """Verify Twitter credentials by calling get_me(). Returns dict with success."""
+    tc = config["twitter"]
+    try:
+        client = tweepy.Client(
+            consumer_key=tc["api_key"],
+            consumer_secret=tc["api_secret"],
+            access_token=tc["access_token"],
+            access_token_secret=tc["access_secret"],
+        )
+        me = client.get_me()
+        return {"success": True, "username": me.data.username}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 def post(config, content_parts, images=None, frontmatter=None):
     """Post tweet or thread to Twitter.
 

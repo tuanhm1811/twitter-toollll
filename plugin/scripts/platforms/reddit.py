@@ -19,6 +19,23 @@ def validate_config(config):
     return validate_platform_config(config, "reddit", REQUIRED_KEYS)
 
 
+def verify_credentials(config):
+    """Verify Reddit credentials by calling user.me(). Returns dict with success."""
+    rc = config["reddit"]
+    try:
+        reddit = praw.Reddit(
+            client_id=rc["client_id"],
+            client_secret=rc["client_secret"],
+            username=rc["username"],
+            password=rc["password"],
+            user_agent=f"social-agent:v2.0.0 (by /u/{rc['username']})",
+        )
+        me = reddit.user.me()
+        return {"success": True, "username": me.name}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 def post(config, content_parts, images=None, frontmatter=None):
     """Post a submission to Reddit.
 

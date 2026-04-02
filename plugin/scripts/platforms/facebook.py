@@ -19,6 +19,22 @@ def validate_config(config):
     return validate_platform_config(config, "facebook", REQUIRED_KEYS)
 
 
+def verify_credentials(config):
+    """Verify Facebook credentials by calling /me. Returns dict with success."""
+    fc = config["facebook"]
+    try:
+        resp = requests.get(
+            f"{GRAPH_API_BASE}/me",
+            params={"access_token": fc["page_access_token"], "fields": "id,name"},
+        )
+        data = resp.json()
+        if "error" in data:
+            return {"success": False, "error": data["error"].get("message", str(data["error"]))}
+        return {"success": True, "page_name": data.get("name", data.get("id"))}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 def post(config, content_parts, images=None, frontmatter=None):
     fc = config["facebook"]
     page_id = fc["page_id"]
