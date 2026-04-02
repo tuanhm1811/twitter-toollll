@@ -111,3 +111,50 @@ def generate_review_html(slots, output_path):
     os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
     with open(output_path, "w") as f:
         f.write(html)
+
+
+def main(argv=None):
+    """CLI entry point: read calendar + draft files, generate HTML review page."""
+    import argparse
+    from scripts.calendar_utils import parse_calendar
+    from scripts.utils.draft import parse_draft
+
+    parser = argparse.ArgumentParser(description="Generate HTML review page from calendar")
+    parser.add_argument("--calendar", required=True, help="Calendar file path")
+    parser.add_argument("--output", required=True, help="Output HTML file path")
+    parser.add_argument("--project-dir", default=".", help="Project root directory")
+    args = parser.parse_args(argv)
+
+    _, slots = parse_calendar(args.calendar)
+
+    review_slots = []
+    for slot in slots:
+        review_slot = {
+            "date": slot["date"],
+            "day": slot["day"],
+            "time": slot["time"],
+            "topic": slot["topic"],
+            "platforms": slot["platforms"],
+            "image": slot["image"],
+            "image_file": slot.get("image_file", ""),
+            "drafts": {},
+        }
+
+        for draft_path in slot.get("drafts", []):
+            full_path = os.path.join(args.project_dir, draft_path)
+            if os.path.exists(full_path):
+                _, parts = parse_draft(full_path)
+                if parts:
+                    # Determine platform from filename (last segment before .md)
+                    basename = os.path.basename(draft_path)
+                    # Pattern: YYYY-MM-DD_slug_type_platform.md
+                    platform = basename.rsplit("_", 1)[-1].replace(".md", "")
+                    review_slot["drafts"][platform] = "\n\n".join(parts)
+
+        review_slots.append(review_slot)
+
+    generate_review_html(review_slots, args.output)
+
+
+if __name__ == "__main__":
+    main()
