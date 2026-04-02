@@ -107,3 +107,32 @@ def update_calendar_status(file_path, new_status):
     metadata, slots = parse_calendar(file_path)
     metadata["status"] = new_status
     write_calendar(file_path, metadata, slots)
+
+
+def main(argv=None):
+    """CLI entry point for calendar operations."""
+    import argparse
+    import json
+
+    parser = argparse.ArgumentParser(description="Calendar file utilities")
+    sub = parser.add_subparsers(dest="action", required=True)
+
+    parse_cmd = sub.add_parser("parse", help="Parse calendar file to JSON")
+    parse_cmd.add_argument("--file", required=True, help="Calendar file path")
+
+    update_cmd = sub.add_parser("update-status", help="Update calendar status")
+    update_cmd.add_argument("--file", required=True, help="Calendar file path")
+    update_cmd.add_argument("--status", required=True, help="New status")
+
+    args = parser.parse_args(argv)
+
+    if args.action == "parse":
+        metadata, slots = parse_calendar(args.file)
+        print(json.dumps({"metadata": metadata, "slots": slots}))
+    elif args.action == "update-status":
+        update_calendar_status(args.file, args.status)
+        print(json.dumps({"success": True, "status": args.status}))
+
+
+if __name__ == "__main__":
+    main()
