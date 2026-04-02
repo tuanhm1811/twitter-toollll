@@ -134,3 +134,43 @@ Hello with image!
         assert call_arg.endswith("images/test_banner.png")
     finally:
         os.unlink(f.name)
+
+
+@patch("scripts.platforms.twitter.tweepy")
+@patch("scripts.utils.config.load_config")
+def test_post_accepts_scheduled_status(mock_load_config, mock_tweepy):
+    """post.py accepts drafts with status: scheduled (from /plan-content)."""
+    mock_load_config.return_value = {
+        "twitter": {"api_key": "k", "api_secret": "s", "access_token": "t", "access_secret": "a"}
+    }
+    mock_client = MagicMock()
+    mock_client.create_tweet.return_value = MagicMock(data={"id": "222", "text": "Scheduled"})
+    mock_tweepy.Client.return_value = mock_client
+
+    content = """---
+platform: twitter
+type: tweet
+topic: "Scheduled Test"
+status: scheduled
+scheduled_at: "2026-04-03 09:00"
+calendar: calendar-2026-04-02.md
+created_at: "2026-04-02 10:00"
+posted_at: ""
+post_ids: []
+has_images: false
+images: []
+---
+
+Scheduled tweet content.
+"""
+    f = tempfile.NamedTemporaryFile(mode="w", suffix=".md", delete=False)
+    f.write(content)
+    f.close()
+
+    try:
+        from scripts.post import main
+        result = main(["--file", f.name])
+        assert result["success"] is True
+        assert result["post_ids"] == ["222"]
+    finally:
+        os.unlink(f.name)
